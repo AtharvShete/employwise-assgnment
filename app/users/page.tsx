@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Loader2, Search, Edit, Trash2, LogOut } from "lucide-react"
+import { Search, Edit, Trash2, LogOut } from "lucide-react"
 import UserEditModal from "@/components/user-edit-modal"
 import DeleteConfirmationModal from "@/components/delete-confirmation-modal"
-import { toast } from "sonner"
 
 interface User {
     id: number
@@ -75,10 +75,7 @@ export default function UsersPage() {
             setFilteredUsers(data.data)
             setTotalPages(data.total_pages)
         } catch (error) {
-            toast("Error", {
-                description: "Failed to fetch users. Please try again.",
-                variant: "destructive",
-            })
+            toast.error("Failed to fetch users. Please try again.")
         } finally {
             setIsLoading(false)
         }
@@ -112,14 +109,9 @@ export default function UsersPage() {
             setUsers(users.map((user) => (user.id === updatedUser.id ? updatedUser : user)))
             setIsEditModalOpen(false)
 
-            toast("Success", {
-                description: "User updated successfully"
-            })
+            toast.success("User updated successfully")
         } catch (error) {
-            toast("Error", {
-                description: "Failed to update user. Please try again.",
-                variant: "destructive"
-            })
+            toast.error("Failed to update user. Please try again.")
         }
     }
 
@@ -139,14 +131,9 @@ export default function UsersPage() {
             setUsers(users.filter((user) => user.id !== selectedUser.id))
             setIsDeleteModalOpen(false)
 
-            toast("Success", {
-                description: "User deleted successfully"
-            })
+            toast.success("User deleted successfully")
         } catch (error) {
-            toast("Error", {
-                description: "Failed to delete user. Please try again.",
-                variant: "destructive"
-            })
+            toast.error("Failed to delete user. Please try again.")
         }
     }
 
@@ -177,36 +164,66 @@ export default function UsersPage() {
             </div>
 
             {isLoading ? (
-                <div className="flex justify-center items-center h-64">
-                    <Loader2 className="h-8 w-8 animate-spin" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {[...Array(8)].map((_, index) => (
+                        <Card key={index} className="overflow-hidden">
+                            <CardContent className="p-0">
+                                <div className="bg-primary/5 p-6 flex justify-center">
+                                    <div className="h-24 w-24 rounded-full bg-muted animate-pulse"></div>
+                                </div>
+                                <div className="p-6 space-y-4">
+                                    <div className="space-y-2">
+                                        <div className="h-5 bg-muted rounded animate-pulse"></div>
+                                        <div className="h-4 bg-muted rounded animate-pulse w-3/4 mx-auto"></div>
+                                    </div>
+                                    <div className="pt-4 border-t border-border flex justify-between">
+                                        <div className="h-9 bg-muted rounded animate-pulse w-[48%]"></div>
+                                        <div className="h-9 bg-muted rounded animate-pulse w-[48%]"></div>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
                 </div>
             ) : (
                 <>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {filteredUsers.map((user) => (
-                            <Card key={user.id} className="overflow-hidden">
+                            <Card key={user.id} className="overflow-hidden transition-all duration-300 hover:shadow-lg">
                                 <CardContent className="p-0">
-                                    <div className="bg-primary/10 p-6 flex justify-center">
-                                        <img
-                                            src={user.avatar || "/placeholder.svg"}
-                                            alt={`${user.first_name} ${user.last_name}`}
-                                            className="h-24 w-24 rounded-full object-cover"
-                                        />
+                                    <div className="bg-gradient-to-r from-primary/10 to-primary/5 p-6 flex justify-center">
+                                        <div className="relative">
+                                            <img
+                                                src={user.avatar || "/placeholder.svg"}
+                                                alt={`${user.first_name} ${user.last_name}`}
+                                                className="h-24 w-24 rounded-full object-cover border-4 border-background shadow-md transition-transform duration-300 hover:scale-105"
+                                            />
+                                            <div className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">
+                                                {user.id}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="p-6">
-                                        <h2 className="text-xl font-semibold">
-                                            {user.first_name} {user.last_name}
-                                        </h2>
-                                        <p className="text-muted-foreground">{user.email}</p>
-                                        <div className="flex mt-4 space-x-2">
-                                            <Button variant="outline" size="sm" onClick={() => handleEditUser(user)}>
+                                    <div className="p-6 space-y-4">
+                                        <div className="text-center">
+                                            <h2 className="text-xl font-semibold">
+                                                {user.first_name} {user.last_name}
+                                            </h2>
+                                            <p className="text-muted-foreground">{user.email}</p>
+                                        </div>
+                                        <div className="pt-4 border-t border-border flex justify-between">
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="flex-1 mr-1 hover:bg-primary/10 hover:text-primary"
+                                                onClick={() => handleEditUser(user)}
+                                            >
                                                 <Edit className="h-4 w-4 mr-2" />
                                                 Edit
                                             </Button>
                                             <Button
-                                                variant="outline"
+                                                variant="ghost"
                                                 size="sm"
-                                                className="text-destructive hover:text-destructive"
+                                                className="flex-1 ml-1 hover:bg-destructive/10 hover:text-destructive"
                                                 onClick={() => handleDeleteUser(user)}
                                             >
                                                 <Trash2 className="h-4 w-4 mr-2" />
