@@ -20,16 +20,13 @@ export default function UserCard({ user, onEdit, onDelete }: UserCardProps) {
     return (
         <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg">
             <CardContent className="p-0">
-                <div className="bg-gradient-to-r from-primary/10 to-primary/5 p-6 flex justify-center">
+                <div className="from-primary/10 to-primary/5 p-6 flex justify-center">
                     <div className="relative">
                         <img
                             src={user.avatar || "/placeholder.svg"}
                             alt={`${user.first_name} ${user.last_name}`}
-                            className="h-24 w-24 rounded-full object-cover border-4 border-background shadow-md transition-transform duration-300 hover:scale-105"
+                            className="h-32 w-32 rounded-full object-cover border-4 border-background shadow-md transition-transform duration-300 hover:scale-105"
                         />
-                        <div className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">
-                            {user.id}
-                        </div>
                     </div>
                 </div>
                 <div className="p-6 space-y-4">

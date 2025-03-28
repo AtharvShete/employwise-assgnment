@@ -4,12 +4,12 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Search, LogOut } from "lucide-react"
 import UserEditModal from "@/components/user-edit-modal"
 import DeleteConfirmationModal from "@/components/delete-confirmation-modal"
 import UserCard from "@/components/user-card"
+import UserSkeletonCard from "@/components/user-skeleton-card"
 import { userApi } from "@/lib/api"
 
 interface User {
@@ -114,7 +114,7 @@ export default function UsersPage() {
     }
 
     return (
-        <div className="container mx-auto py-8 px-4">
+        <div className="container mx-auto py-8 px-10">
             <div className="flex flex-col md:flex-row justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold mb-4 md:mb-0">User Management</h1>
                 <div className="flex items-center space-x-4 w-full md:w-auto">
@@ -135,30 +135,14 @@ export default function UsersPage() {
             </div>
 
             {isLoading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 px-10">
                     {[...Array(8)].map((_, index) => (
-                        <Card key={index} className="overflow-hidden">
-                            <CardContent className="p-0">
-                                <div className="bg-primary/5 p-6 flex justify-center">
-                                    <div className="h-24 w-24 rounded-full bg-muted animate-pulse"></div>
-                                </div>
-                                <div className="p-6 space-y-4">
-                                    <div className="space-y-2">
-                                        <div className="h-5 bg-muted rounded animate-pulse"></div>
-                                        <div className="h-4 bg-muted rounded animate-pulse w-3/4 mx-auto"></div>
-                                    </div>
-                                    <div className="pt-4 border-t border-border flex justify-between">
-                                        <div className="h-9 bg-muted rounded animate-pulse w-[48%]"></div>
-                                        <div className="h-9 bg-muted rounded animate-pulse w-[48%]"></div>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <UserSkeletonCard key={index} />
                     ))}
                 </div>
             ) : (
                 <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 px-10 py-10">
                         {filteredUsers.map((user) => (
                             <UserCard
                                 key={user.id}
