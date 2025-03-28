@@ -64,6 +64,7 @@ export default function UsersPage() {
             setFilteredUsers(data.data)
             setTotalPages(data.total_pages)
         } catch (error) {
+            console.error("Error fetching users:", error)
             toast.error("Failed to fetch users. Please try again.")
         } finally {
             setIsLoading(false)
@@ -89,6 +90,7 @@ export default function UsersPage() {
 
             toast.success("User updated successfully")
         } catch (error) {
+            console.error("Error updating user:", error)
             toast.error("Failed to update user. Please try again.")
         }
     }
@@ -104,6 +106,7 @@ export default function UsersPage() {
 
             toast.success("User deleted successfully")
         } catch (error) {
+            console.error("Error deleting user:", error)
             toast.error("Failed to delete user. Please try again.")
         }
     }

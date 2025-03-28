@@ -30,7 +30,7 @@ export default function DeleteConfirmationModal({
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action will permanently delete {userName}'s account and remove their data from our servers.
+                        This action will permanently delete {userName}&apos;s account and remove their data from our servers.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

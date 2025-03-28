@@ -1,5 +1,30 @@
 const API_BASE_URL = "https://reqres.in/api";
 
+// Define interfaces for type safety
+interface User {
+	id: number;
+	email: string;
+	first_name: string;
+	last_name: string;
+	avatar: string;
+}
+
+interface UserUpdateData {
+	name?: string;
+	job?: string;
+	email?: string;
+	first_name?: string;
+	last_name?: string;
+}
+
+interface PaginatedResponse<T> {
+	page: number;
+	per_page: number;
+	total: number;
+	total_pages: number;
+	data: T[];
+}
+
 const handleResponse = async (response: Response) => {
 	if (!response.ok) {
 		const error = await response.text();
@@ -35,7 +60,7 @@ export const fetchData = async <T>(endpoint: string): Promise<T> => {
 
 export const updateData = async <T>(
 	endpoint: string,
-	data: any,
+	data: unknown,
 ): Promise<T> => {
 	try {
 		const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -64,8 +89,9 @@ export const deleteData = async (endpoint: string): Promise<void> => {
 };
 
 export const userApi = {
-	getUsers: (page: number) => fetchData<any>(`/users?page=${page}`),
-	updateUser: (userId: number, userData: any) =>
-		updateData(`/users/${userId}`, userData),
+	getUsers: (page: number) =>
+		fetchData<PaginatedResponse<User>>(`/users?page=${page}`),
+	updateUser: (userId: number, userData: UserUpdateData) =>
+		updateData<User>(`/users/${userId}`, userData),
 	deleteUser: (userId: number) => deleteData(`/users/${userId}`),
 };

@@ -93,7 +93,7 @@ export default function UserEditModal({ isOpen, onClose, user, onUpdate }: UserE
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>Edit User</DialogTitle>
-                    <DialogDescription>Make changes to the user's information here.</DialogDescription>
+                    <DialogDescription>Make changes to the user&apos;s information here.</DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit}>
                     <div className="grid gap-4 py-4">
