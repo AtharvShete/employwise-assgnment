@@ -6,9 +6,10 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Search, Edit, Trash2, LogOut } from "lucide-react"
+import { Search, LogOut } from "lucide-react"
 import UserEditModal from "@/components/user-edit-modal"
 import DeleteConfirmationModal from "@/components/delete-confirmation-modal"
+import UserCard from "@/components/user-card"
 import { userApi } from "@/lib/api"
 
 interface User {
@@ -17,14 +18,6 @@ interface User {
     first_name: string
     last_name: string
     avatar: string
-}
-
-interface ApiResponse {
-    page: number
-    per_page: number
-    total: number
-    total_pages: number
-    data: User[]
 }
 
 export default function UsersPage() {
@@ -91,7 +84,6 @@ export default function UsersPage() {
         try {
             await userApi.updateUser(updatedUser.id, updatedUser)
 
-            // Update user in the local state
             setUsers(users.map((user) => (user.id === updatedUser.id ? updatedUser : user)))
             setIsEditModalOpen(false)
 
@@ -107,7 +99,6 @@ export default function UsersPage() {
         try {
             await userApi.deleteUser(selectedUser.id)
 
-            // Remove user from the local state
             setUsers(users.filter((user) => user.id !== selectedUser.id))
             setIsDeleteModalOpen(false)
 
@@ -169,50 +160,12 @@ export default function UsersPage() {
                 <>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {filteredUsers.map((user) => (
-                            <Card key={user.id} className="overflow-hidden transition-all duration-300 hover:shadow-lg">
-                                <CardContent className="p-0">
-                                    <div className="bg-gradient-to-r from-primary/10 to-primary/5 p-6 flex justify-center">
-                                        <div className="relative">
-                                            <img
-                                                src={user.avatar || "/placeholder.svg"}
-                                                alt={`${user.first_name} ${user.last_name}`}
-                                                className="h-24 w-24 rounded-full object-cover border-4 border-background shadow-md transition-transform duration-300 hover:scale-105"
-                                            />
-                                            <div className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">
-                                                {user.id}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="p-6 space-y-4">
-                                        <div className="text-center">
-                                            <h2 className="text-xl font-semibold">
-                                                {user.first_name} {user.last_name}
-                                            </h2>
-                                            <p className="text-muted-foreground">{user.email}</p>
-                                        </div>
-                                        <div className="pt-4 border-t border-border flex justify-between">
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="flex-1 mr-1 hover:bg-primary/10 hover:text-primary"
-                                                onClick={() => handleEditUser(user)}
-                                            >
-                                                <Edit className="h-4 w-4 mr-2" />
-                                                Edit
-                                            </Button>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="flex-1 ml-1 hover:bg-destructive/10 hover:text-destructive"
-                                                onClick={() => handleDeleteUser(user)}
-                                            >
-                                                <Trash2 className="h-4 w-4 mr-2" />
-                                                Delete
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
+                            <UserCard
+                                key={user.id}
+                                user={user}
+                                onEdit={handleEditUser}
+                                onDelete={handleDeleteUser}
+                            />
                         ))}
                     </div>
 

@@ -46,7 +46,6 @@ export default function UserEditModal({ isOpen, onClose, user, onUpdate }: UserE
         const { name, value } = e.target
         setFormData((prev) => ({ ...prev, [name]: value }))
 
-        // Clear error when user types
         if (errors[name as keyof typeof errors]) {
             setErrors((prev) => ({ ...prev, [name]: "" }))
         }
