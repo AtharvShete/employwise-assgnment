@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Search, Edit, Trash2, LogOut } from "lucide-react"
 import UserEditModal from "@/components/user-edit-modal"
 import DeleteConfirmationModal from "@/components/delete-confirmation-modal"
+import { userApi } from "@/lib/api"
 
 interface User {
     id: number
@@ -39,7 +40,6 @@ export default function UsersPage() {
     const router = useRouter()
 
     useEffect(() => {
-        // Check if user is logged in
         const token = localStorage.getItem("token")
         if (!token) {
             router.push("/login")
@@ -66,11 +66,7 @@ export default function UsersPage() {
     const fetchUsers = async (page: number) => {
         setIsLoading(true)
         try {
-            const response = await fetch(`https://reqres.in/api/users?page=${page}`)
-            if (!response.ok) {
-                throw new Error("Failed to fetch users")
-            }
-            const data: ApiResponse = await response.json()
+            const data = await userApi.getUsers(page)
             setUsers(data.data)
             setFilteredUsers(data.data)
             setTotalPages(data.total_pages)
@@ -93,17 +89,7 @@ export default function UsersPage() {
 
     const handleUpdateUser = async (updatedUser: User) => {
         try {
-            const response = await fetch(`https://reqres.in/api/users/${updatedUser.id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(updatedUser),
-            })
-
-            if (!response.ok) {
-                throw new Error("Failed to update user")
-            }
+            await userApi.updateUser(updatedUser.id, updatedUser)
 
             // Update user in the local state
             setUsers(users.map((user) => (user.id === updatedUser.id ? updatedUser : user)))
@@ -119,13 +105,7 @@ export default function UsersPage() {
         if (!selectedUser) return
 
         try {
-            const response = await fetch(`https://reqres.in/api/users/${selectedUser.id}`, {
-                method: "DELETE",
-            })
-
-            if (!response.ok) {
-                throw new Error("Failed to delete user")
-            }
+            await userApi.deleteUser(selectedUser.id)
 
             // Remove user from the local state
             setUsers(users.filter((user) => user.id !== selectedUser.id))
